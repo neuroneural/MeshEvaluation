@@ -22,6 +22,8 @@ curl \
 git \
 wget \
 cmake \
+libx11-dev \
+libglu1-mesa-dev \
 vim && rm -rf /var/lib/apt/lists/*
 ENV PYTHON_VERSION=3.7
 ENV CONDA_URL=https://repo.anaconda.com/miniconda/Miniconda3-py37_4.10.3-Linux-x86_64.sh
@@ -38,7 +40,14 @@ SHELL ["conda", "run", "-n", "cortexode", "/bin/bash", "-c"]
 RUN conda install pytorch3d=0.4.0 -c pytorch3d
 RUN pip install mesh_intersection-0.1.0-cp37-cp37m-linux_x86_64.whl
 RUN pip install nvidia-ml-py3
+RUN git clone https://github.com/neuroneural/torch-mesh-isect.git
+WORKDIR /app/torch-mesh-isect
+RUN pip install -r requirements.txt
+RUN pip install pyrender
+RUN pip install trimesh
+
 RUN apt-get clean
 RUN pip cache purge
 RUN conda clean -a
+
 ENTRYPOINT ["/bin/bash"]
